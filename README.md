@@ -1,7 +1,9 @@
 # astextract
+![Test](https://github.com/lu4p/astextract/workflows/Test/badge.svg)
+
 astextract converts a given go file to its [ast](https://pkg.go.dev/go/ast) representation.
 
-This is useful for easliy writing typesafe `go generate` tools, which don't concatenate strings for the generated code. 
+This is useful for easliy writing typesafe `go generate` tools, which don't concatenate strings for generating code. 
 
 The output of astextract is 100% valid go, so it can be used in go code directly without any modifications.
 
