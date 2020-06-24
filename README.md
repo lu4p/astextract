@@ -1,5 +1,7 @@
 # astextract
 ![Test](https://github.com/lu4p/astextract/workflows/Test/badge.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/lu4p/binclude)](https://goreportcard.com/report/github.com/lu4p/binclude)
+
 
 astextract converts a given go file to its [ast](https://pkg.go.dev/go/ast) representation.
 
