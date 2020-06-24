@@ -1,5 +1,5 @@
 # astextract
-astextract converts a given go file to its [go/ast](https://pkg.go.dev/go/ast) representation.
+astextract converts a given go file to its [ast](https://pkg.go.dev/go/ast) representation.
 
 This is useful for easliy writing typesafe `go generate` tools, which don't concatenate strings for the generated code. 
 
