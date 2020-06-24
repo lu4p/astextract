@@ -20,6 +20,7 @@ I already wrote [binclude](https://github.com/lu4p/binclude) a tool for resource
 
 ## Usage
 `astextract [flags] file`
+
 See `astextract -h` for up to date usage information.
 
 ## Example 
