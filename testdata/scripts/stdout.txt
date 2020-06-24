@@ -1,0 +1,1334 @@
+astextract main.go
+cmp stdout main.stdout
+
+-- main.go --
+// Package main comment
+package main
+
+import "fmt"
+
+type strucTest struct {
+	field        string
+	anotherfield string
+}
+
+const (
+	cnst      string = "Lorem"
+	multiline        = `First Line
+Second Line`
+
+	i = 1
+
+	foo = iota
+	bar
+)
+
+var globalVar = "globalVar"
+
+const arrayLen = 4
+
+var array [arrayLen]byte
+
+type typeAlias [arrayLen]byte
+
+func main() {
+
+	empty := ""
+
+	localVar := "dolor"
+
+	reassign := "first assign"
+	reassign = "second assign"
+
+	fmt.Println(cnst)
+	fmt.Println(globalVar)
+	fmt.Println(multiline)
+	fmt.Println(localVar)
+	fmt.Println(reassign)
+	fmt.Println(empty)
+
+	x := strucTest{
+		field:        "to obfuscate",
+		anotherfield: "also obfuscate",
+	}
+
+	fmt.Println(x.field, x.anotherfield)
+
+	testMap := map[string]string{"map key": "map value"}
+	testMap["map key"] = "new value"
+	fmt.Println(testMap["map key"])
+	fmt.Println("another literal")
+	fmt.Println(i, foo, bar)
+	fmt.Println(ellipsisTest("arg1", "arg2"))
+	typedTest()
+}
+
+type stringType string
+
+type stringTypeStruct struct {
+	str     string
+	strType stringType
+}
+
+func typedTest() {
+	const skipTypedConst stringType = "typed const"
+	var skipTypedVar stringType = "typed var"
+
+	var skipTypedVarAssign stringType
+	skipTypedVarAssign = "typed var assign"
+
+	fmt.Println(skipTypedConst, skipTypedVar, skipTypedVarAssign)
+
+	y := stringTypeStruct{
+		str:     "stringTypeField String",
+		strType: "stringTypeField strType",
+	}
+	fmt.Println(y.str, y.strType)
+
+	z := func(s stringType) stringType {
+		return "stringType lambda func return"
+	}("lambda call")
+	fmt.Println(z)
+
+	testMap1 := map[string]stringType{"testMap1 key": "testMap1 value"}
+	testMap1["testMap1 key"] = "testMap1 new value"
+
+	testMap2 := map[stringType]string{"testMap2 key": "testMap2 value"}
+	testMap2["testMap2 key"] = "testMap2 new value"
+
+	testMap3 := map[stringType]stringType{"testMap3 key": "testMap3 value"}
+	testMap3["testMap3 key"] = "testMap3 new value"
+
+	fmt.Println(stringTypeFunc("stringType func param"))
+}
+
+func stringTypeFunc(s stringType) stringType {
+	fmt.Println(s)
+	return "stringType return"
+}
+
+func ellipsisTest(args ...string) (ret string) {
+	for _, arg := range args {
+		ret += arg + ","
+	}
+	return
+}
+
+-- main.stdout --
+&ast.File {
+  Doc: &ast.CommentGroup {
+    List: []*ast.Comment {
+      &ast.Comment {
+        Slash: 1,
+        Text: "// Package main comment",
+      },
+    },
+  },
+  Package: 25,
+  Name: &ast.Ident {
+    Name: "main",
+  },
+  Decls: []ast.Decl {
+    &ast.GenDecl {
+      Tok: token.IMPORT,
+      Specs: []ast.Spec {
+        &ast.ImportSpec {
+          Path: &ast.BasicLit {
+            Kind: token.STRING,
+            Value: "\"fmt\"",
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.TYPE,
+      Specs: []ast.Spec {
+        &ast.TypeSpec {
+          Name: &ast.Ident {
+            Name: "strucTest",
+          },
+          Type: &ast.StructType {
+            Fields: &ast.FieldList {
+              List: []*ast.Field {
+                &ast.Field {
+                  Names: []*ast.Ident {
+                    &ast.Ident {
+                      Name: "field",
+                    },
+                  },
+                  Type: &ast.Ident {
+                    Name: "string",
+                  },
+                },
+                &ast.Field {
+                  Names: []*ast.Ident {
+                    &ast.Ident {
+                      Name: "anotherfield",
+                    },
+                  },
+                  Type: &ast.Ident {
+                    Name: "string",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.CONST,
+      Specs: []ast.Spec {
+        &ast.ValueSpec {
+          Names: []*ast.Ident {
+            &ast.Ident {
+              Name: "cnst",
+            },
+          },
+          Type: &ast.Ident {
+            Name: "string",
+          },
+          Values: []ast.Expr {
+            &ast.BasicLit {
+              Kind: token.STRING,
+              Value: "\"Lorem\"",
+            },
+          },
+        },
+        &ast.ValueSpec {
+          Names: []*ast.Ident {
+            &ast.Ident {
+              Name: "multiline",
+            },
+          },
+          Values: []ast.Expr {
+            &ast.BasicLit {
+              Kind: token.STRING,
+              Value: "`First Line\nSecond Line`",
+            },
+          },
+        },
+        &ast.ValueSpec {
+          Names: []*ast.Ident {
+            &ast.Ident {
+              Name: "i",
+            },
+          },
+          Values: []ast.Expr {
+            &ast.BasicLit {
+              Kind: token.INT,
+              Value: "1",
+            },
+          },
+        },
+        &ast.ValueSpec {
+          Names: []*ast.Ident {
+            &ast.Ident {
+              Name: "foo",
+            },
+          },
+          Values: []ast.Expr {
+            &ast.Ident {
+              Name: "iota",
+            },
+          },
+        },
+        &ast.ValueSpec {
+          Names: []*ast.Ident {
+            &ast.Ident {
+              Name: "bar",
+            },
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.VAR,
+      Specs: []ast.Spec {
+        &ast.ValueSpec {
+          Names: []*ast.Ident {
+            &ast.Ident {
+              Name: "globalVar",
+            },
+          },
+          Values: []ast.Expr {
+            &ast.BasicLit {
+              Kind: token.STRING,
+              Value: "\"globalVar\"",
+            },
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.CONST,
+      Specs: []ast.Spec {
+        &ast.ValueSpec {
+          Names: []*ast.Ident {
+            &ast.Ident {
+              Name: "arrayLen",
+            },
+          },
+          Values: []ast.Expr {
+            &ast.BasicLit {
+              Kind: token.INT,
+              Value: "4",
+            },
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.VAR,
+      Specs: []ast.Spec {
+        &ast.ValueSpec {
+          Names: []*ast.Ident {
+            &ast.Ident {
+              Name: "array",
+            },
+          },
+          Type: &ast.ArrayType {
+            Len: &ast.Ident {
+              Name: "arrayLen",
+            },
+            Elt: &ast.Ident {
+              Name: "byte",
+            },
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.TYPE,
+      Specs: []ast.Spec {
+        &ast.TypeSpec {
+          Name: &ast.Ident {
+            Name: "typeAlias",
+          },
+          Type: &ast.ArrayType {
+            Len: &ast.Ident {
+              Name: "arrayLen",
+            },
+            Elt: &ast.Ident {
+              Name: "byte",
+            },
+          },
+        },
+      },
+    },
+    &ast.FuncDecl {
+      Name: &ast.Ident {
+        Name: "main",
+      },
+      Type: &ast.FuncType {
+        Params: &ast.FieldList {},
+      },
+      Body: &ast.BlockStmt {
+        List: []ast.Stmt {
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "empty",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"\"",
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "localVar",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"dolor\"",
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "reassign",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"first assign\"",
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "reassign",
+              },
+            },
+            Tok: token.ASSIGN,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"second assign\"",
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "cnst",
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "globalVar",
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "multiline",
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "localVar",
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "reassign",
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "empty",
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "x",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.CompositeLit {
+                Type: &ast.Ident {
+                  Name: "strucTest",
+                },
+                Elts: []ast.Expr {
+                  &ast.KeyValueExpr {
+                    Key: &ast.Ident {
+                      Name: "field",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"to obfuscate\"",
+                    },
+                  },
+                  &ast.KeyValueExpr {
+                    Key: &ast.Ident {
+                      Name: "anotherfield",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"also obfuscate\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.SelectorExpr {
+                  X: &ast.Ident {
+                    Name: "x",
+                  },
+                  Sel: &ast.Ident {
+                    Name: "field",
+                  },
+                },
+                &ast.SelectorExpr {
+                  X: &ast.Ident {
+                    Name: "x",
+                  },
+                  Sel: &ast.Ident {
+                    Name: "anotherfield",
+                  },
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "testMap",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.CompositeLit {
+                Type: &ast.MapType {
+                  Key: &ast.Ident {
+                    Name: "string",
+                  },
+                  Value: &ast.Ident {
+                    Name: "string",
+                  },
+                },
+                Elts: []ast.Expr {
+                  &ast.KeyValueExpr {
+                    Key: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"map key\"",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"map value\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.IndexExpr {
+                X: &ast.Ident {
+                  Name: "testMap",
+                },
+                Index: &ast.BasicLit {
+                  Kind: token.STRING,
+                  Value: "\"map key\"",
+                },
+              },
+            },
+            Tok: token.ASSIGN,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"new value\"",
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.IndexExpr {
+                  X: &ast.Ident {
+                    Name: "testMap",
+                  },
+                  Index: &ast.BasicLit {
+                    Kind: token.STRING,
+                    Value: "\"map key\"",
+                  },
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.BasicLit {
+                  Kind: token.STRING,
+                  Value: "\"another literal\"",
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "i",
+                },
+                &ast.Ident {
+                  Name: "foo",
+                },
+                &ast.Ident {
+                  Name: "bar",
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.CallExpr {
+                  Fun: &ast.Ident {
+                    Name: "ellipsisTest",
+                  },
+                  Args: []ast.Expr {
+                    &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"arg1\"",
+                    },
+                    &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"arg2\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.Ident {
+                Name: "typedTest",
+              },
+            },
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.TYPE,
+      Specs: []ast.Spec {
+        &ast.TypeSpec {
+          Name: &ast.Ident {
+            Name: "stringType",
+          },
+          Type: &ast.Ident {
+            Name: "string",
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.TYPE,
+      Specs: []ast.Spec {
+        &ast.TypeSpec {
+          Name: &ast.Ident {
+            Name: "stringTypeStruct",
+          },
+          Type: &ast.StructType {
+            Fields: &ast.FieldList {
+              List: []*ast.Field {
+                &ast.Field {
+                  Names: []*ast.Ident {
+                    &ast.Ident {
+                      Name: "str",
+                    },
+                  },
+                  Type: &ast.Ident {
+                    Name: "string",
+                  },
+                },
+                &ast.Field {
+                  Names: []*ast.Ident {
+                    &ast.Ident {
+                      Name: "strType",
+                    },
+                  },
+                  Type: &ast.Ident {
+                    Name: "stringType",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    &ast.FuncDecl {
+      Name: &ast.Ident {
+        Name: "typedTest",
+      },
+      Type: &ast.FuncType {
+        Params: &ast.FieldList {},
+      },
+      Body: &ast.BlockStmt {
+        List: []ast.Stmt {
+          &ast.DeclStmt {
+            Decl: &ast.GenDecl {
+              Tok: token.CONST,
+              Specs: []ast.Spec {
+                &ast.ValueSpec {
+                  Names: []*ast.Ident {
+                    &ast.Ident {
+                      Name: "skipTypedConst",
+                    },
+                  },
+                  Type: &ast.Ident {
+                    Name: "stringType",
+                  },
+                  Values: []ast.Expr {
+                    &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"typed const\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.DeclStmt {
+            Decl: &ast.GenDecl {
+              Tok: token.VAR,
+              Specs: []ast.Spec {
+                &ast.ValueSpec {
+                  Names: []*ast.Ident {
+                    &ast.Ident {
+                      Name: "skipTypedVar",
+                    },
+                  },
+                  Type: &ast.Ident {
+                    Name: "stringType",
+                  },
+                  Values: []ast.Expr {
+                    &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"typed var\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.DeclStmt {
+            Decl: &ast.GenDecl {
+              Tok: token.VAR,
+              Specs: []ast.Spec {
+                &ast.ValueSpec {
+                  Names: []*ast.Ident {
+                    &ast.Ident {
+                      Name: "skipTypedVarAssign",
+                    },
+                  },
+                  Type: &ast.Ident {
+                    Name: "stringType",
+                  },
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "skipTypedVarAssign",
+              },
+            },
+            Tok: token.ASSIGN,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"typed var assign\"",
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "skipTypedConst",
+                },
+                &ast.Ident {
+                  Name: "skipTypedVar",
+                },
+                &ast.Ident {
+                  Name: "skipTypedVarAssign",
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "y",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.CompositeLit {
+                Type: &ast.Ident {
+                  Name: "stringTypeStruct",
+                },
+                Elts: []ast.Expr {
+                  &ast.KeyValueExpr {
+                    Key: &ast.Ident {
+                      Name: "str",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"stringTypeField String\"",
+                    },
+                  },
+                  &ast.KeyValueExpr {
+                    Key: &ast.Ident {
+                      Name: "strType",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"stringTypeField strType\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.SelectorExpr {
+                  X: &ast.Ident {
+                    Name: "y",
+                  },
+                  Sel: &ast.Ident {
+                    Name: "str",
+                  },
+                },
+                &ast.SelectorExpr {
+                  X: &ast.Ident {
+                    Name: "y",
+                  },
+                  Sel: &ast.Ident {
+                    Name: "strType",
+                  },
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "z",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.CallExpr {
+                Fun: &ast.FuncLit {
+                  Type: &ast.FuncType {
+                    Params: &ast.FieldList {
+                      List: []*ast.Field {
+                        &ast.Field {
+                          Names: []*ast.Ident {
+                            &ast.Ident {
+                              Name: "s",
+                            },
+                          },
+                          Type: &ast.Ident {
+                            Name: "stringType",
+                          },
+                        },
+                      },
+                    },
+                    Results: &ast.FieldList {
+                      List: []*ast.Field {
+                        &ast.Field {
+                          Type: &ast.Ident {
+                            Name: "stringType",
+                          },
+                        },
+                      },
+                    },
+                  },
+                  Body: &ast.BlockStmt {
+                    List: []ast.Stmt {
+                      &ast.ReturnStmt {
+                        Results: []ast.Expr {
+                          &ast.BasicLit {
+                            Kind: token.STRING,
+                            Value: "\"stringType lambda func return\"",
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+                Args: []ast.Expr {
+                  &ast.BasicLit {
+                    Kind: token.STRING,
+                    Value: "\"lambda call\"",
+                  },
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "z",
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "testMap1",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.CompositeLit {
+                Type: &ast.MapType {
+                  Key: &ast.Ident {
+                    Name: "string",
+                  },
+                  Value: &ast.Ident {
+                    Name: "stringType",
+                  },
+                },
+                Elts: []ast.Expr {
+                  &ast.KeyValueExpr {
+                    Key: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"testMap1 key\"",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"testMap1 value\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.IndexExpr {
+                X: &ast.Ident {
+                  Name: "testMap1",
+                },
+                Index: &ast.BasicLit {
+                  Kind: token.STRING,
+                  Value: "\"testMap1 key\"",
+                },
+              },
+            },
+            Tok: token.ASSIGN,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"testMap1 new value\"",
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "testMap2",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.CompositeLit {
+                Type: &ast.MapType {
+                  Key: &ast.Ident {
+                    Name: "stringType",
+                  },
+                  Value: &ast.Ident {
+                    Name: "string",
+                  },
+                },
+                Elts: []ast.Expr {
+                  &ast.KeyValueExpr {
+                    Key: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"testMap2 key\"",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"testMap2 value\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.IndexExpr {
+                X: &ast.Ident {
+                  Name: "testMap2",
+                },
+                Index: &ast.BasicLit {
+                  Kind: token.STRING,
+                  Value: "\"testMap2 key\"",
+                },
+              },
+            },
+            Tok: token.ASSIGN,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"testMap2 new value\"",
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "testMap3",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.CompositeLit {
+                Type: &ast.MapType {
+                  Key: &ast.Ident {
+                    Name: "stringType",
+                  },
+                  Value: &ast.Ident {
+                    Name: "stringType",
+                  },
+                },
+                Elts: []ast.Expr {
+                  &ast.KeyValueExpr {
+                    Key: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"testMap3 key\"",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"testMap3 value\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.IndexExpr {
+                X: &ast.Ident {
+                  Name: "testMap3",
+                },
+                Index: &ast.BasicLit {
+                  Kind: token.STRING,
+                  Value: "\"testMap3 key\"",
+                },
+              },
+            },
+            Tok: token.ASSIGN,
+            Rhs: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"testMap3 new value\"",
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.CallExpr {
+                  Fun: &ast.Ident {
+                    Name: "stringTypeFunc",
+                  },
+                  Args: []ast.Expr {
+                    &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"stringType func param\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    &ast.FuncDecl {
+      Name: &ast.Ident {
+        Name: "stringTypeFunc",
+      },
+      Type: &ast.FuncType {
+        Params: &ast.FieldList {
+          List: []*ast.Field {
+            &ast.Field {
+              Names: []*ast.Ident {
+                &ast.Ident {
+                  Name: "s",
+                },
+              },
+              Type: &ast.Ident {
+                Name: "stringType",
+              },
+            },
+          },
+        },
+        Results: &ast.FieldList {
+          List: []*ast.Field {
+            &ast.Field {
+              Type: &ast.Ident {
+                Name: "stringType",
+              },
+            },
+          },
+        },
+      },
+      Body: &ast.BlockStmt {
+        List: []ast.Stmt {
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.Ident {
+                  Name: "s",
+                },
+              },
+            },
+          },
+          &ast.ReturnStmt {
+            Results: []ast.Expr {
+              &ast.BasicLit {
+                Kind: token.STRING,
+                Value: "\"stringType return\"",
+              },
+            },
+          },
+        },
+      },
+    },
+    &ast.FuncDecl {
+      Name: &ast.Ident {
+        Name: "ellipsisTest",
+      },
+      Type: &ast.FuncType {
+        Params: &ast.FieldList {
+          List: []*ast.Field {
+            &ast.Field {
+              Names: []*ast.Ident {
+                &ast.Ident {
+                  Name: "args",
+                },
+              },
+              Type: &ast.Ellipsis {
+                Elt: &ast.Ident {
+                  Name: "string",
+                },
+              },
+            },
+          },
+        },
+        Results: &ast.FieldList {
+          List: []*ast.Field {
+            &ast.Field {
+              Names: []*ast.Ident {
+                &ast.Ident {
+                  Name: "ret",
+                },
+              },
+              Type: &ast.Ident {
+                Name: "string",
+              },
+            },
+          },
+        },
+      },
+      Body: &ast.BlockStmt {
+        List: []ast.Stmt {
+          &ast.RangeStmt {
+            For: 2101,
+            Key: &ast.Ident {
+              Name: "_",
+            },
+            Value: &ast.Ident {
+              Name: "arg",
+            },
+            Tok: token.DEFINE,
+            X: &ast.Ident {
+              Name: "args",
+            },
+            Body: &ast.BlockStmt {
+              List: []ast.Stmt {
+                &ast.AssignStmt {
+                  Lhs: []ast.Expr {
+                    &ast.Ident {
+                      Name: "ret",
+                    },
+                  },
+                  Tok: token.ADD_ASSIGN,
+                  Rhs: []ast.Expr {
+                    &ast.BinaryExpr {
+                      X: &ast.Ident {
+                        Name: "arg",
+                      },
+                      Op: token.ADD,
+                      Y: &ast.BasicLit {
+                        Kind: token.STRING,
+                        Value: "\",\"",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.ReturnStmt {},
+        },
+      },
+    },
+  },
+  Imports: []*ast.ImportSpec {
+    &ast.ImportSpec {
+      Path: &ast.BasicLit {
+        Kind: token.STRING,
+        Value: "\"fmt\"",
+      },
+    },
+  },
+}

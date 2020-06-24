@@ -1,0 +1,145 @@
+# Test that astextract generates ast
+# which is consistent with the input file
+go run main.go
+cmp stdout main.stdout
+astextract -out=gen/main.go main.go
+go run gen/main.go
+go run gen.go
+
+cmp stdout main.stdout
+
+-- main.go --
+// Package main comment
+package main
+
+import "fmt"
+
+type strucTest struct {
+	field        string
+	anotherfield string
+}
+
+const (
+	cnst      string = "Lorem"
+	multiline        = `First Line
+Second Line`
+
+	i = 1
+
+	foo = iota
+	bar
+)
+
+var globalVar = "globalVar"
+
+const arrayLen = 4
+
+var array [arrayLen]byte
+
+type typeAlias [arrayLen]byte
+
+func main() {
+
+	bytes := []byte{123, 123, 123}
+	fmt.Println(bytes)
+
+	localVar := "dolor"
+
+	reassign := "first assign"
+	reassign = "second assign"
+
+	fmt.Println(cnst)
+	fmt.Println(globalVar)
+	fmt.Println(multiline)
+	fmt.Println(localVar)
+	fmt.Println(reassign)
+
+	x := strucTest{
+		field:        "to obfuscate",
+		anotherfield: "also obfuscate",
+	}
+
+	fmt.Println(x.field, x.anotherfield)
+
+	testMap := map[string]string{"map key": "map value"}
+	testMap["map key"] = "new value"
+	fmt.Println(testMap["map key"])
+	fmt.Println("another literal")
+	fmt.Println(i, foo, bar)
+	fmt.Println(ellipsisTest("arg1", "arg2"))
+	typedTest()
+}
+
+type stringType string
+
+type stringTypeStruct struct {
+	str     string
+	strType stringType
+}
+
+func typedTest() {
+	const skipTypedConst stringType = "typed const"
+	var skipTypedVar stringType = "typed var"
+
+	var skipTypedVarAssign stringType
+	skipTypedVarAssign = "typed var assign"
+
+	fmt.Println(skipTypedConst, skipTypedVar, skipTypedVarAssign)
+
+	y := stringTypeStruct{
+		str:     "stringTypeField String",
+		strType: "stringTypeField strType",
+	}
+	fmt.Println(y.str, y.strType)
+
+	z := func(s stringType) stringType {
+		return "stringType lambda func return"
+	}("lambda call")
+	fmt.Println(z)
+
+	testMap1 := map[string]stringType{
+		"testMap1 key": "testMap1 value",
+		"testMap2 key": "testMap2 value",
+	}
+
+	testMap1["testMap1 key"] = "testMap1 new value"
+
+	testMap2 := map[stringType]string{"testMap2 key": "testMap2 value"}
+	testMap2["testMap2 key"] = "testMap2 new value"
+
+	testMap3 := map[stringType]stringType{"testMap3 key": "testMap3 value"}
+	testMap3["testMap3 key"] = "testMap3 new value"
+
+	fmt.Println(stringTypeFunc("stringType func param"))
+}
+
+func stringTypeFunc(s stringType) stringType {
+	fmt.Println(s)
+	return "stringType return"
+}
+
+func ellipsisTest(args ...string) (ret string) {
+	for _, arg := range args {
+		ret += arg + ","
+	}
+	return
+}
+
+-- main.stdout --
+[123 123 123]
+Lorem
+globalVar
+First Line
+Second Line
+dolor
+second assign
+to obfuscate also obfuscate
+new value
+another literal
+1 3 4
+arg1,arg2,
+typed const typed var typed var assign
+stringTypeField String stringTypeField strType
+stringType lambda func return
+stringType func param
+stringType return
