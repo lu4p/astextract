@@ -1,5 +1,5 @@
 # astextract
-![Test](https://github.com/lu4p/astextract/workflows/Test/badge.svg)
+[![Test](https://github.com/lu4p/astextract/workflows/Test/badge.svg)](https://github.com/lu4p/astextract/actions?query=workflow%3ATest)
 [![Go Report Card](https://goreportcard.com/badge/github.com/lu4p/astextract)](https://goreportcard.com/report/github.com/lu4p/astextract)
 
 
