@@ -22,7 +22,7 @@ The Web app was created using the amazing [go-app](https://github.com/maxence-ch
 
 
 ## Install
-`GO111MODULE=on go get -u github.com/lu4p/astextract`
+`GO111MODULE=on go get -u github.com/lu4p/astextract/cmd/astextract`
 
 ## Usage
 `astextract [flags] file`
