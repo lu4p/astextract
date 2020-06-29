@@ -18,7 +18,7 @@ func main() {
 		Resources: app.GitHubPages("astextract"),
 	}
 
-	err := app.GenerateStaticWebsite("../static", h)
+	err := app.GenerateStaticWebsite("../../docs", h)
 	if err != nil {
 		fmt.Println(err)
 		return
