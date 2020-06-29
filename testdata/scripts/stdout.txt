@@ -1282,7 +1282,6 @@ func ellipsisTest(args ...string) (ret string) {
       Body: &ast.BlockStmt {
         List: []ast.Stmt {
           &ast.RangeStmt {
-            For: 2101,
             Key: &ast.Ident {
               Name: "_",
             },
@@ -1332,3 +1331,4 @@ func ellipsisTest(args ...string) (ret string) {
     },
   },
 }
+

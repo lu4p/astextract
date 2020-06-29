@@ -1,13 +1,12 @@
-package main
+package astextract
 
 import (
-	"bytes"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 )
 
-func genFile(outfile string, b *bytes.Buffer) error {
+func genFile(outfile string, out string) error {
 	y := `package main
 
 	import (
@@ -19,7 +18,7 @@ func genFile(outfile string, b *bytes.Buffer) error {
 	)
 	
 	func main() {
-		z := ` + b.String() + `
+		z := ` + out + `
 
 		// example usage
 		f, err := os.OpenFile("gen.go", os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)

@@ -6,7 +6,7 @@
 
 // This file contains printing support for ASTs.
 
-package main
+package astextract
 
 import (
 	"fmt"
@@ -37,7 +37,7 @@ func PosFilter(name string, v reflect.Value) bool {
 	}
 
 	blacklist := []string{
-		"If", "Return", "Func", "Opening", "Closing", "Colon", "Obj", "Ellipsis", "Struct", "Map",
+		"If", "Return", "Func", "Opening", "Closing", "Colon", "Obj", "Ellipsis", "Struct", "Map", "For", "Star",
 	}
 
 	bracePos := []string{"brace", "paren", "brack"}
