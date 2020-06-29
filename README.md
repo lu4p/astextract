@@ -15,6 +15,12 @@ Absolute Position info is stripped, because positions change if you add any dyna
 
 I already wrote [binclude](https://github.com/lu4p/binclude) a tool for resource embedding with the help of astextraxt, and added string obfuscation to [garble](https://github.com/mvdan/garble).
 
+## Progressive web app
+astextract be used as a Progressive web app: https://lu4p.github.io/astextract/
+
+The web app was created using the amazing [go-app](https://github.com/maxence-charriere/go-app) package.
+
+
 ## Install
 `GO111MODULE=on go get -u github.com/lu4p/astextract`
 
