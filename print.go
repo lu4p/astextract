@@ -57,7 +57,7 @@ func PosFilter(name string, v reflect.Value) bool {
 // KeywordFilter returns false for blacklisted field names
 func KeywordFilter(name string, v reflect.Value) bool {
 	var blacklist = []string{
-		"Scope", "Unresolved", "Comments",
+		"Scope", "Unresolved", "Doc",
 	}
 
 	for _, item := range blacklist {

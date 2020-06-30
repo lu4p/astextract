@@ -85,6 +85,12 @@ func Parse(input string) (string, error) {
 		return "", err
 	}
 
+	for i, comment := range f.Comments {
+		if comment.Pos() > f.Package {
+			f.Comments = f.Comments[:i]
+		}
+	}
+
 	err = Fprint(&b, fset, f, filters)
 	if err != nil {
 		return "", err
