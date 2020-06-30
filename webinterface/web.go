@@ -5,7 +5,7 @@ import (
 	"github.com/maxence-charriere/go-app/v7/pkg/app"
 )
 
-//go:generate env GOARCH=wasm GOOS=js go build -o generator/web/app.wasm
+//go:generate env GOARCH=wasm GOOS=js go build -o ../docs/web/app.wasm
 
 const explain = `This tool converts Go code into its go/ast representation,  using WebAssembly.`
 
@@ -37,7 +37,7 @@ func (aw *astweb) Render() app.UI {
 		app.Div().Class("columns").Body(
 			app.Div().Class("column").Body(
 				app.Div().Class("form-group").Body(
-					app.Textarea().Rows(30).Class("form-input").Placeholder("Go code").OnInput(aw.OnChange).OnChange(aw.OnChange),
+					app.Textarea().Rows(30).Class("form-input").Placeholder("Go code").OnInput(aw.OnChange),
 				),
 			),
 
