@@ -116,14 +116,6 @@ func ellipsisTest(args ...string) (ret string) {
 
 -- main.stdout --
 &ast.File {
-  Doc: &ast.CommentGroup {
-    List: []*ast.Comment {
-      &ast.Comment {
-        Slash: 1,
-        Text: "// Package main comment",
-      },
-    },
-  },
   Package: 25,
   Name: &ast.Ident {
     Name: "main",
@@ -1327,6 +1319,16 @@ func ellipsisTest(args ...string) (ret string) {
       Path: &ast.BasicLit {
         Kind: token.STRING,
         Value: "\"fmt\"",
+      },
+    },
+  },
+  Comments: []*ast.CommentGroup {
+    &ast.CommentGroup {
+      List: []*ast.Comment {
+        &ast.Comment {
+          Slash: 1,
+          Text: "// Package main comment",
+        },
       },
     },
   },
