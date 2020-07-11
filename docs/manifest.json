@@ -13,7 +13,8 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "/",
+  "scope": "/astextract/",
+  "start_url": "/astextract/",
   "background_color": "#2d2c2c",
   "display": "standalone",
   "theme_color": "#2d2c2c"

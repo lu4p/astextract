@@ -2,7 +2,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <meta content="text/html; charset=utf-8" httpequiv="Content-Type">
+        <meta httpequiv="Content-Type" content="text/html; charset=utf-8">
         <meta name="author" content="lu4p">
         <meta name="description" content>
         <meta name="keywords" content>
@@ -15,18 +15,18 @@
         <link rel="apple-touch-icon" href="https://storage.googleapis.com/murlok-github/icon-192.png">
         <link rel="manifest" href="/astextract/manifest.json">
         <link type="text/css" rel="stylesheet" href="/astextract/app.css">
-        <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css" type="text/css">
+        <script defer src="/astextract/wasm_exec.js"></script>
+        <script src="/astextract/app.js" defer></script>
+        <link type="text/css" rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
     </head>
     <body>
         <div id="app-wasm-layout" class="goapp-app-info">
-            <img class="goapp-logo goapp-spin" src="https://storage.googleapis.com/murlok-github/icon-192.png" id="app-wasm-loader-icon">
-            <p class="goapp-label" id="app-wasm-loader-label">
+            <img id="app-wasm-loader-icon" class="goapp-logo goapp-spin" src="https://storage.googleapis.com/murlok-github/icon-192.png">
+            <p id="app-wasm-loader-label" class="goapp-label">
                 Loading
             </p>
         </div>
         <div id="app-context-menu"></div>
-        <script src="/astextract/wasm_exec.js"></script>
-        <script src="/astextract/app.js"></script>
         <div id="app-end"></div>
     </body>
 </html>
