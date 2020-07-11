@@ -11,10 +11,11 @@ import (
 
 func main() {
 	h := &app.Handler{
-		Name:   "astextract",
-		Title:  "astextract",
-		Author: "lu4p",
-		Styles: []string{"https://unpkg.com/spectre.css/dist/spectre.min.css"},
+		Name:       "astextract",
+		Title:      "astextract",
+		Author:     "lu4p",
+		ThemeColor: "#ffffff",
+		Styles:     []string{"https://unpkg.com/spectre.css/dist/spectre.min.css"},
 	}
 
 	fmt.Println("listening on http://localhost:7778")
