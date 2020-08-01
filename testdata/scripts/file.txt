@@ -2,144 +2,557 @@
 # which is consistent with the input file
 go run main.go
 cmp stdout main.stdout
+cp stdout normal.stdout
+rm stdout
 astextract -out=gen/main.go main.go
 go run gen/main.go
 go run gen.go
-
+cmp stdout normal.stdout
 cmp stdout main.stdout
 
 -- main.go --
 // Package main comment
 package main
 
-import "fmt"
-
-type strucTest struct {
-	field        string
-	anotherfield string
-}
-
-const (
-	cnst      string = "Lorem"
-	multiline        = `First Line
-Second Line`
-
-	i = 1
-
-	foo = iota
-	bar
+import (
+	"fmt"
+	"math"
+	"os"
+	"path/filepath"
+	"time"
 )
 
-var globalVar = "globalVar"
-
-const arrayLen = 4
-
-var array [arrayLen]byte
-
-type typeAlias [arrayLen]byte
-
 func main() {
-
-	bytes := []byte{123, 123, 123}
-	fmt.Println(bytes)
-
-	localVar := "dolor"
-
-	reassign := "first assign"
-	reassign = "second assign"
-
-	fmt.Println(cnst)
-	fmt.Println(globalVar)
-	fmt.Println(multiline)
-	fmt.Println(localVar)
-	fmt.Println(reassign)
-
-	x := strucTest{
-		field:        "to obfuscate",
-		anotherfield: "also obfuscate",
-	}
-
-	fmt.Println(x.field, x.anotherfield)
-
-	testMap := map[string]string{"map key": "map value"}
-	testMap["map key"] = "new value"
-	fmt.Println(testMap["map key"])
-	fmt.Println("another literal")
-	fmt.Println(i, foo, bar)
-	fmt.Println(ellipsisTest("arg1", "arg2"))
-	typedTest()
+	vars()
+	constants()
+	fors()
+	ifs()
+	switches()
+	arrays()
+	slices()
+	maps()
+	ranges()
+	variadic()
+	pointers()
+	structs()
+	interfaces()
+	selectTest()
+	closeChannels()
+	label()
 }
 
-type stringType string
+func vars() {
+	var a = "initial"
+	fmt.Println(a)
 
-type stringTypeStruct struct {
-	str     string
-	strType stringType
+	var b, c int = 1, 2
+	fmt.Println(b, c)
+
+	var d = true
+	fmt.Println(d)
+
+	var e int
+	fmt.Println(e)
+
+	f := "apple"
+	fmt.Println(f)
 }
 
-func typedTest() {
-	const skipTypedConst stringType = "typed const"
-	var skipTypedVar stringType = "typed var"
+const s string = "constant"
 
-	var skipTypedVarAssign stringType
-	skipTypedVarAssign = "typed var assign"
-
-	fmt.Println(skipTypedConst, skipTypedVar, skipTypedVarAssign)
-
-	y := stringTypeStruct{
-		str:     "stringTypeField String",
-		strType: "stringTypeField strType",
-	}
-	fmt.Println(y.str, y.strType)
-
-	z := func(s stringType) stringType {
-		return "stringType lambda func return"
-	}("lambda call")
-	fmt.Println(z)
-
-	testMap1 := map[string]stringType{
-		"testMap1 key": "testMap1 value",
-		"testMap2 key": "testMap2 value",
-	}
-
-	testMap1["testMap1 key"] = "testMap1 new value"
-
-	testMap2 := map[stringType]string{"testMap2 key": "testMap2 value"}
-	testMap2["testMap2 key"] = "testMap2 new value"
-
-	testMap3 := map[stringType]stringType{"testMap3 key": "testMap3 value"}
-	testMap3["testMap3 key"] = "testMap3 new value"
-
-	fmt.Println(stringTypeFunc("stringType func param"))
-}
-
-func stringTypeFunc(s stringType) stringType {
+func constants() {
 	fmt.Println(s)
-	return "stringType return"
+
+	const n = 500000000
+
+	const d = 3e20 / n
+	fmt.Println(d)
+
+	fmt.Println(int64(d))
+
+	fmt.Println(math.Sin(n))
 }
 
-func ellipsisTest(args ...string) (ret string) {
-	for _, arg := range args {
-		ret += arg + ","
+func fors() {
+	i := 1
+	for i <= 3 {
+		fmt.Println(i)
+		i = i + 1
 	}
-	return
+
+	for j := 7; j <= 9; j++ {
+		fmt.Println(j)
+	}
+
+	for {
+		fmt.Println("loop")
+		break
+	}
+
+	for n := 0; n <= 5; n++ {
+		if n%2 == 0 {
+			continue
+		}
+		fmt.Println(n)
+	}
 }
+
+func ifs() {
+	if 7%2 == 0 {
+		fmt.Println("7 is even")
+	} else {
+		fmt.Println("7 is odd")
+	}
+
+	if 8%4 == 0 || (1 == 2) {
+		fmt.Println("8 is divisible by 4")
+	}
+
+	if num := 9; num < 0 {
+		fmt.Println(num, "is negative")
+	} else if num < 10 {
+		fmt.Println(num, "has 1 digit")
+	} else {
+		fmt.Println(num, "has multiple digits")
+	}
+}
+
+func switches() {
+	i := 2
+	fmt.Print("Write ", i, " as ")
+	switch i {
+	case 1:
+		fmt.Println("one")
+	case 2:
+		fmt.Println("two")
+	case 3:
+		fmt.Println("three")
+	}
+
+	switch time.Now().Weekday() {
+	case time.Saturday, time.Sunday:
+		fmt.Println("It's the weekend")
+	default:
+		fmt.Println("It's a weekday")
+	}
+
+	t := time.Now()
+	switch {
+	case t.Hour() < 12:
+		fmt.Println("It's before noon")
+	default:
+		fmt.Println("It's after noon")
+	}
+
+	whatAmI := func(i interface{}) {
+		switch t := i.(type) {
+		case bool:
+			fmt.Println("I'm a bool")
+		case int:
+			fmt.Println("I'm an int")
+		default:
+			fmt.Printf("Don't know type %T\n", t)
+		}
+	}
+	whatAmI(true)
+	whatAmI(1)
+	whatAmI("hey")
+}
+
+func arrays() {
+
+	var a [5]int
+	fmt.Println("emp:", a)
+
+	a[4] = 100
+	fmt.Println("set:", a)
+	fmt.Println("get:", a[4])
+
+	fmt.Println("len:", len(a))
+
+	b := [5]int{1, 2, 3, 4, 5}
+	fmt.Println("dcl:", b)
+
+	var twoD [2][3]int
+	for i := 0; i < 2; i++ {
+		for j := 0; j < 3; j++ {
+			twoD[i][j] = i + j
+		}
+	}
+	fmt.Println("2d: ", twoD)
+}
+
+func slices() {
+
+	s := make([]string, 3)
+	fmt.Println("emp:", s)
+
+	s[0] = "a"
+	s[1] = "b"
+	s[2] = "c"
+	fmt.Println("set:", s)
+	fmt.Println("get:", s[2])
+
+	fmt.Println("len:", len(s))
+
+	s = append(s, "d")
+	s = append(s, "e", "f")
+	fmt.Println("apd:", s)
+
+	c := make([]string, len(s))
+	copy(c, s)
+	fmt.Println("cpy:", c)
+
+	l := s[2:5]
+	fmt.Println("sl1:", l)
+
+	l = s[:5]
+	fmt.Println("sl2:", l)
+
+	l = s[2:]
+	fmt.Println("sl3:", l)
+
+	t := []string{"g", "h", "i"}
+	fmt.Println("dcl:", t)
+
+	twoD := make([][]int, 3)
+	for i := 0; i < 3; i++ {
+		innerLen := i + 1
+		twoD[i] = make([]int, innerLen)
+		for j := 0; j < innerLen; j++ {
+			twoD[i][j] = i + j
+		}
+	}
+	fmt.Println("2d: ", twoD)
+}
+
+func maps() {
+
+	m := make(map[string]int)
+
+	m["k1"] = 7
+	m["k2"] = 13
+
+	fmt.Println("map:", m)
+
+	v1 := m["k1"]
+	fmt.Println("v1: ", v1)
+
+	fmt.Println("len:", len(m))
+
+	delete(m, "k2")
+	fmt.Println("map:", m)
+
+	_, prs := m["k2"]
+	fmt.Println("prs:", prs)
+
+	n := map[string]int{"foo": 1, "bar": 2}
+	fmt.Println("map:", n)
+}
+
+func ranges() {
+
+	nums := []int{2, 3, 4}
+	sum := 0
+	for _, num := range nums {
+		sum += num
+	}
+	fmt.Println("sum:", sum)
+
+	for i, num := range nums {
+		if num == 3 {
+			fmt.Println("index:", i)
+		}
+	}
+
+	for i, c := range "go" {
+		fmt.Println(i, c)
+	}
+}
+
+func variadic() {
+
+	sum := func(nums ...int) {
+		fmt.Print(nums, " ")
+		total := 0
+		for _, num := range nums {
+			total += num
+		}
+		fmt.Println(total)
+	}
+
+	sum(1, 2)
+	sum(1, 2, 3)
+
+	nums := []int{1, 2, 3, 4}
+	sum(nums...)
+}
+
+func pointers() {
+	zeroval := func(ival int) {
+		ival = 0
+	}
+
+	zeroptr := func(iptr *int) {
+		*iptr = 0
+	}
+	i := 1
+	fmt.Println("initial:", i)
+
+	zeroval(i)
+	fmt.Println("zeroval:", i)
+
+	zeroptr(&i)
+	fmt.Println("zeroptr:", i)
+}
+
+func structs() {
+	type person struct {
+		name string
+		age  int
+	}
+
+	newPerson := func(name string) *person {
+		p := person{name: name}
+		p.age = 42
+		return &p
+	}
+
+	fmt.Println(person{"Bob", 20})
+
+	fmt.Println(person{name: "Alice", age: 30})
+
+	fmt.Println(person{name: "Fred"})
+
+	fmt.Println(&person{name: "Ann", age: 40})
+
+	fmt.Println(newPerson("Jon"))
+
+	s := person{name: "Sean", age: 50}
+	fmt.Println(s.name)
+
+	sp := &s
+	fmt.Println(sp.age)
+
+	sp.age = 51
+	fmt.Println(sp.age)
+}
+
+// interfaces
+type geometry interface {
+	area() float64
+	perim() float64
+}
+
+type rect struct {
+	width, height float64
+}
+
+type circle struct {
+	radius float64
+}
+
+func (r rect) area() float64 {
+	return r.width * r.height
+}
+func (r rect) perim() float64 {
+	return 2*r.width + 2*r.height
+}
+
+func (c circle) area() float64 {
+	return math.Pi * c.radius * c.radius
+}
+func (c circle) perim() float64 {
+	return 2 * math.Pi * c.radius
+}
+
+func measure(g geometry) {
+	fmt.Println(g)
+	fmt.Println(g.area())
+	fmt.Println(g.perim())
+}
+
+func interfaces() {
+	r := rect{width: 3, height: 4}
+	c := circle{radius: 5}
+
+	measure(r)
+	measure(c)
+}
+
+func selectTest() {
+	c1 := make(chan string)
+	c2 := make(chan string)
+
+	go func() {
+		time.Sleep(1 * time.Millisecond)
+		c1 <- "one"
+	}()
+	go func() {
+		time.Sleep(2 * time.Millisecond)
+		c2 <- "two"
+	}()
+
+	for i := 0; i < 2; i++ {
+		select {
+		case msg1 := <-c1:
+			fmt.Println("received", msg1)
+		case msg2 := <-c2:
+			fmt.Println("received", msg2)
+		}
+	}
+}
+
+func closeChannels() {
+	jobs := make(chan int, 5)
+	done := make(chan bool)
+
+	go func() {
+		for {
+			j, more := <-jobs
+			if more {
+				fmt.Println("received job", j)
+			} else {
+				fmt.Println("received all jobs")
+				done <- true
+				return
+			}
+		}
+	}()
+
+	for j := 1; j <= 3; j++ {
+		jobs <- j
+		fmt.Println("sent job", j)
+	}
+	close(jobs)
+	fmt.Println("sent all jobs")
+
+	<-done
+}
+
+func label() {
+	/* local variable definition */
+	var a int = 10
+
+	/* do loop execution */
+LOOP:
+	for a < 20 {
+		if a == 15 {
+			/* skip the iteration */
+			a = a + 1
+			goto LOOP
+		}
+		fmt.Printf("value of a: %d\n", a)
+		a++
+	}
+}
+
+func deferTest() {
+	f, err := os.Create(filepath.Join(os.TempDir(), "defer.txt"))
+	if err != nil {
+		panic(err)
+	}
+	defer f.Close()
+
+	_, err = f.WriteString("data")
+	if err != nil {
+		panic(err)
+	}
+}
+
 
 -- main.stdout --
-[123 123 123]
-Lorem
-globalVar
-First Line
-Second Line
-dolor
-second assign
-to obfuscate also obfuscate
-new value
-another literal
-1 3 4
-arg1,arg2,
-typed const typed var typed var assign
-stringTypeField String stringTypeField strType
-stringType lambda func return
-stringType func param
-stringType return
+initial
+1 2
+true
+0
+apple
+constant
+6e+11
+600000000000
+-0.28470407323754404
+1
+2
+3
+7
+8
+9
+loop
+1
+3
+5
+7 is odd
+8 is divisible by 4
+9 has 1 digit
+Write 2 as two
+It's the weekend
+It's after noon
+I'm a bool
+I'm an int
+Don't know type string
+emp: [0 0 0 0 0]
+set: [0 0 0 0 100]
+get: 100
+len: 5
+dcl: [1 2 3 4 5]
+2d:  [[0 1 2] [1 2 3]]
+emp: [  ]
+set: [a b c]
+get: c
+len: 3
+apd: [a b c d e f]
+cpy: [a b c d e f]
+sl1: [c d e]
+sl2: [a b c d e]
+sl3: [c d e f]
+dcl: [g h i]
+2d:  [[0] [1 2] [2 3 4]]
+map: map[k1:7 k2:13]
+v1:  7
+len: 2
+map: map[k1:7]
+prs: false
+map: map[bar:2 foo:1]
+sum: 9
+index: 1
+0 103
+1 111
+[1 2] 3
+[1 2 3] 6
+[1 2 3 4] 10
+initial: 1
+zeroval: 1
+zeroptr: 0
+{Bob 20}
+{Alice 30}
+{Fred 0}
+&{Ann 40}
+&{Jon 42}
+Sean
+50
+51
+{3 4}
+12
+14
+{5}
+78.53981633974483
+31.41592653589793
+received one
+received two
+sent job 1
+sent job 2
+sent job 3
+sent all jobs
+received job 1
+received job 2
+received job 3
+received all jobs
+value of a: 10
+value of a: 11
+value of a: 12
+value of a: 13
+value of a: 14
+value of a: 16
+value of a: 17
+value of a: 18
+value of a: 19

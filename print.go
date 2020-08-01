@@ -30,6 +30,33 @@ func ZeroFilter(name string, v reflect.Value) bool {
 	return !v.IsZero()
 }
 
+var types = []string{
+	"ArrayType", "AssignStmt", "BasicLit", "BinaryExpr", "BlockStmt",
+	"BranchStmt", "CallExpr", "CaseClause", "ChanType",
+	"CommClause", "CompositeLit", "DeclStmt", "DeferStmt",
+	"Ellipsis", "ExprStmt", "Field", "FieldList", "File",
+	"ForStmt", "FuncDecl", "FuncLit", "FuncType", "GenDecl", "GoStmt",
+	"Ident", "IfStmt", "ImportSpec", "IncDecStmt", "IndexExpr", "InterfaceType",
+	"KeyValueExpr", "LabeledStmt", "MapType", "ParenExpr", "RangeStmt",
+	"ReturnStmt", "SelectStmt", "SelectorExpr", "SendStmt", "SliceExpr",
+	"StarExpr", "StructType", "SwitchStmt", "TypeAssertExpr", "TypeSpec",
+	"TypeSwitchStmt", "UnaryExpr", "ValueSpec",
+}
+
+// UnusedTypes this is for checking test coverage
+var UnusedTypes map[string]uint8
+
+func init() {
+	genUnusedTypes()
+}
+
+func genUnusedTypes() {
+	UnusedTypes = make(map[string]uint8, len(types))
+	for _, t := range types {
+		UnusedTypes[t] = 0
+	}
+}
+
 // PosFilter returns false for field names which are Positions
 func PosFilter(name string, v reflect.Value) bool {
 	if strings.HasSuffix(name, "Pos") {
@@ -37,7 +64,9 @@ func PosFilter(name string, v reflect.Value) bool {
 	}
 
 	blacklist := []string{
-		"If", "Return", "Func", "Opening", "Closing", "Colon", "Obj", "Ellipsis", "Struct", "Map", "For", "Star",
+		"If", "Return", "Func", "Opening", "Closing", "Colon", "Obj",
+		"Struct", "Map", "For", "Star", "Case", "Begin", "Defer", "Go",
+		"Interface", "Select", "Struct", "Switch", "Arrow",
 	}
 
 	bracePos := []string{"brace", "paren", "brack"}
@@ -247,6 +276,8 @@ func (p *printer) print(x reflect.Value) {
 
 	case reflect.Struct:
 		t := x.Type()
+		delete(UnusedTypes, t.Name())
+
 		p.printf("%s {", t)
 		p.indent++
 		first := true

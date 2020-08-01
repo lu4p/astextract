@@ -1249,6 +1249,7 @@ func ellipsisTest(args ...string) (ret string) {
                 },
               },
               Type: &ast.Ellipsis {
+                Ellipsis: 2074,
                 Elt: &ast.Ident {
                   Name: "string",
                 },
