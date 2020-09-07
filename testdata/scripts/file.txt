@@ -370,7 +370,6 @@ func selectTest() {
 	c2 := make(chan string)
 
 	go func() {
-		time.Sleep(1 * time.Millisecond)
 		c1 <- "one"
 	}()
 	go func() {
