@@ -1,7 +1,7 @@
-const cacheName = "app-" + "1d803cfd4223967be62c5c3408633d866795bf4f";
+const cacheName = "app-" + "91e7989a230f05103fe4e93dc2e57405536cff69";
 
 self.addEventListener("install", event => {
-  console.log("installing app worker 1d803cfd4223967be62c5c3408633d866795bf4f");
+  console.log("installing app worker 91e7989a230f05103fe4e93dc2e57405536cff69");
   self.skipWaiting();
 
   event.waitUntil(
@@ -10,7 +10,7 @@ self.addEventListener("install", event => {
         "/astextract",
         "/astextract/app.css",
         "/astextract/app.js",
-        "/astextract/manifest.json",
+        "/astextract/manifest.webmanifest",
         "/astextract/wasm_exec.js",
         "/astextract/web/app.wasm",
         "https://storage.googleapis.com/murlok-github/icon-192.png",
@@ -34,7 +34,7 @@ self.addEventListener("activate", event => {
       );
     })
   );
-  console.log("app worker 1d803cfd4223967be62c5c3408633d866795bf4f is activated");
+  console.log("app worker 91e7989a230f05103fe4e93dc2e57405536cff69 is activated");
 });
 
 self.addEventListener("fetch", event => {
