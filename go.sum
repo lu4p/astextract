@@ -10,8 +10,8 @@ github.com/kr/pretty v0.1.0/go.mod h1:dAy3ld7l9f0ibDNOQOHHMYYIIbhfbHSm3C4ZsoJORN
 github.com/kr/pty v1.1.1/go.mod h1:pFQYn66WHrOpPYNljwOMqo10TkYh1fy3cYio2l3bCsQ=
 github.com/kr/text v0.1.0 h1:45sCR5RtlFHMR4UwH9sdQ5TC8v0qDQCHnXt+kaKSTVE=
 github.com/kr/text v0.1.0/go.mod h1:4Jbv+DJW3UT/LiOwJeYQe1efqtUx/iVham/4vfdArNI=
-github.com/maxence-charriere/go-app/v7 v7.0.7 h1:u0rAVQiZHSIkOwEZbNDjRQBeCV0n+X52J9EbgDpMBhU=
-github.com/maxence-charriere/go-app/v7 v7.0.7/go.mod h1:3S3cKNiz6/ib081vPTkM+WOuIIK7qtq+7wtHFX9/Svw=
+github.com/maxence-charriere/go-app/v7 v7.1.2 h1:SfMyCPgwDqI/FibBqmQYrJV9kJW0RZOlRbzvvv41ORU=
+github.com/maxence-charriere/go-app/v7 v7.1.2/go.mod h1:3S3cKNiz6/ib081vPTkM+WOuIIK7qtq+7wtHFX9/Svw=
 github.com/pmezard/go-difflib v1.0.0 h1:4DBwDE0NGyQoBHbLQYPwSUPoCMWR5BEzIk/f1lZbAQM=
 github.com/pmezard/go-difflib v1.0.0/go.mod h1:iKH77koFhYxTK1pcRnkKkqfTogsbg7gZNVY4sRDYZ/4=
 github.com/rogpeppe/go-internal v1.6.2 h1:aIihoIOHCiLZHxyoNQ+ABL4NKhFTgKLBdMLyEAh98m0=
