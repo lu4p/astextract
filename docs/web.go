@@ -1,11 +1,15 @@
+//go:build !static && !debug
+
 package main
 
 import (
+	"fmt"
+
 	"github.com/lu4p/astextract"
-	"github.com/maxence-charriere/go-app/v7/pkg/app"
+	"github.com/maxence-charriere/go-app/v9/pkg/app"
 )
 
-//go:generate env GOARCH=wasm GOOS=js go build -o ../docs/web/app.wasm
+//go:generate env GOARCH=wasm GOOS=js go build -ldflags "-s -w" -o ./web/app.wasm
 
 const explain = `This tool converts Go code into its go/ast representation,  using WebAssembly.`
 
@@ -53,7 +57,7 @@ func (aw *astweb) Render() app.UI {
 }
 
 func (aw *astweb) OnChange(ctx app.Context, e app.Event) {
-	input := ctx.JSSrc.Get("value").String()
+	input := ctx.JSSrc().Get("value").String()
 
 	ast, err := astextract.Parse(input)
 	if err != nil {
@@ -67,5 +71,21 @@ func (aw *astweb) OnChange(ctx app.Context, e app.Event) {
 
 func main() {
 	app.Route("/", &astweb{})
-	app.Run()
+	app.RunWhenOnBrowser()
+
+	h := &app.Handler{
+		Name:       "astextract",
+		Title:      "astextract",
+		ThemeColor: "#ffffff",
+		Author:     "lu4p",
+		Styles:     []string{"https://unpkg.com/spectre.css/dist/spectre.min.css"},
+		Resources:  app.GitHubPages("astextract"),
+	}
+
+	err := app.GenerateStaticWebsite("", h)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("static website generated")
 }

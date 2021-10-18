@@ -1,6 +1,7 @@
 {
   "short_name": "astextract",
   "name": "astextract",
+  "description": "",
   "icons": [
     {
       "src": "https://storage.googleapis.com/murlok-github/icon-192.png",

@@ -1,11 +1,24 @@
 // -----------------------------------------------------------------------------
 // Init service worker
 // -----------------------------------------------------------------------------
+var goappOnUpdate = function () { };
+
 if ("serviceWorker" in navigator) {
   navigator.serviceWorker
     .register("/astextract/app-worker.js")
     .then(reg => {
       console.log("registering app service worker");
+
+      reg.onupdatefound = function () {
+        const installingWorker = reg.installing;
+        installingWorker.onstatechange = function () {
+          if (installingWorker.state == "installed") {
+            if (navigator.serviceWorker.controller) {
+              goappOnUpdate();
+            }
+          }
+        };
+      }
     })
     .catch(err => {
       console.error("offline service worker registration failed", err);
@@ -13,49 +26,45 @@ if ("serviceWorker" in navigator) {
 }
 
 // -----------------------------------------------------------------------------
-// Init progressive app
+// Env
 // -----------------------------------------------------------------------------
-const goappEnv = {"GOAPP_ROOT_PREFIX":"/astextract","GOAPP_STATIC_RESOURCES_URL":"/astextract","GOAPP_VERSION":"91e7989a230f05103fe4e93dc2e57405536cff69"};
+const goappEnv = {"GOAPP_INTERNAL_URLS":"null","GOAPP_ROOT_PREFIX":"/astextract","GOAPP_STATIC_RESOURCES_URL":"/astextract","GOAPP_VERSION":"5e127a19e718aafbeb227fcf4ad575f36e3e8316"};
 
 function goappGetenv(k) {
   return goappEnv[k];
 }
 
-let deferredPrompt;
+// -----------------------------------------------------------------------------
+// App install
+// -----------------------------------------------------------------------------
+let deferredPrompt = null;
+var goappOnAppInstallChange = function () { };
 
 window.addEventListener("beforeinstallprompt", e => {
   e.preventDefault();
   deferredPrompt = e;
+  goappOnAppInstallChange();
 });
 
-// -----------------------------------------------------------------------------
-// Init Web Assembly
-// -----------------------------------------------------------------------------
-if (!WebAssembly.instantiateStreaming) {
-  WebAssembly.instantiateStreaming = async (resp, importObject) => {
-    const source = await (await resp).arrayBuffer();
-    return await WebAssembly.instantiate(source, importObject);
-  };
+window.addEventListener('appinstalled', () => {
+  deferredPrompt = null;
+  goappOnAppInstallChange();
+});
+
+function goappIsAppInstallable() {
+  return !goappIsAppInstalled() && deferredPrompt != null;
 }
 
-const go = new Go();
+function goappIsAppInstalled() {
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  return isStandalone || navigator.standalone;
+}
 
-WebAssembly.instantiateStreaming(fetch("/astextract/web/app.wasm"), go.importObject)
-  .then(result => {
-    const loaderIcon = document.getElementById("app-wasm-loader-icon");
-    loaderIcon.className = "goapp-logo";
-
-    go.run(result.instance);
-  })
-  .catch(err => {
-    const loaderIcon = document.getElementById("app-wasm-loader-icon");
-    loaderIcon.className = "goapp-logo";
-
-    const loaderLabel = document.getElementById("app-wasm-loader-label");
-    loaderLabel.innerText = err;
-
-    console.error("loading wasm failed: " + err);
-  });
+async function goappShowInstallPrompt() {
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+}
 
 // -----------------------------------------------------------------------------
 // Keep body clean
@@ -81,4 +90,37 @@ function goappKeepBodyClean() {
   });
 
   return () => mutationObserver.disconnect();
+}
+
+// -----------------------------------------------------------------------------
+// Init Web Assembly
+// -----------------------------------------------------------------------------
+if (!/bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent)) {
+  if (!WebAssembly.instantiateStreaming) {
+    WebAssembly.instantiateStreaming = async (resp, importObject) => {
+      const source = await (await resp).arrayBuffer();
+      return await WebAssembly.instantiate(source, importObject);
+    };
+  }
+
+  const go = new Go();
+
+  WebAssembly.instantiateStreaming(fetch("/astextract/web/app.wasm"), go.importObject)
+    .then(result => {
+      const loaderIcon = document.getElementById("app-wasm-loader-icon");
+      loaderIcon.className = "goapp-logo";
+
+      go.run(result.instance);
+    })
+    .catch(err => {
+      const loaderIcon = document.getElementById("app-wasm-loader-icon");
+      loaderIcon.className = "goapp-logo";
+
+      const loaderLabel = document.getElementById("app-wasm-loader-label");
+      loaderLabel.innerText = err;
+
+      console.error("loading wasm failed: " + err);
+    });
+} else {
+  document.getElementById('app-wasm-loader').style.display = "none";
 }
