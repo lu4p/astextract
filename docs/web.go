@@ -80,7 +80,7 @@ func main() {
 		ThemeColor: "#ffffff",
 		Author:     "lu4p",
 		Styles:     []string{"https://unpkg.com/spectre.css/dist/spectre.min.css"},
-		Resources:  app.GitHubPages("astextract"),
+		Resources:  app.CustomProvider("", ""),
 	}
 
 	err := app.GenerateStaticWebsite("", h)
