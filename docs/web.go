@@ -10,6 +10,7 @@ import (
 )
 
 //go:generate env GOARCH=wasm GOOS=js go build -ldflags "-s -w" -o ./web/app.wasm
+//go:generate go run .
 
 const explain = `This tool converts Go code into its go/ast representation,  using WebAssembly.`
 
