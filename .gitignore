@@ -4,7 +4,6 @@ webinterface/generator/generator
 docs/app-worker.js
 docs/app.css
 docs/app.js
-docs/index.html
 docs/manifest.webmanifest
 docs/wasm_exec.js
 docs/web/app.wasm
