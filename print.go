@@ -119,17 +119,17 @@ func AppendFilters(filters ...FieldFilter) FieldFilter {
 // struct fields for which f(fieldname, fieldvalue) is true are
 // printed; all others are filtered from the output. Unexported
 // struct fields are never printed.
-func Fprint(w io.Writer, fset *token.FileSet, x interface{}, f FieldFilter) error {
+func Fprint(w io.Writer, fset *token.FileSet, x any, f FieldFilter) error {
 	return fprint(w, fset, x, f)
 }
 
-func fprint(w io.Writer, fset *token.FileSet, x interface{}, f FieldFilter) (err error) {
+func fprint(w io.Writer, fset *token.FileSet, x any, f FieldFilter) (err error) {
 	// setup printer
 	p := printer{
 		output: w,
 		fset:   fset,
 		filter: f,
-		ptrmap: make(map[interface{}]int),
+		ptrmap: make(map[any]int),
 		last:   '\n', // force printing of line number on first line
 	}
 
@@ -155,10 +155,10 @@ type printer struct {
 	output io.Writer
 	fset   *token.FileSet
 	filter FieldFilter
-	ptrmap map[interface{}]int // *T -> line number
-	indent int                 // current indentation level
-	last   byte                // the last byte processed by Write
-	line   int                 // current line number
+	ptrmap map[any]int // *T -> line number
+	indent int         // current indentation level
+	last   byte        // the last byte processed by Write
+	line   int         // current line number
 }
 
 var indent = []byte("  ")
@@ -198,7 +198,7 @@ type localError struct {
 }
 
 // printf is a convenience wrapper that takes care of print errors.
-func (p *printer) printf(format string, args ...interface{}) {
+func (p *printer) printf(format string, args ...any) {
 	if _, err := fmt.Fprintf(p, format, args...); err != nil {
 		panic(localError{err})
 	}
@@ -302,6 +302,7 @@ func (p *printer) print(x reflect.Value) {
 		}
 		p.indent--
 		p.printf("}")
+
 	default:
 		v := x.Interface()
 		switch v := v.(type) {
