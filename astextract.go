@@ -6,9 +6,8 @@ import (
 	"fmt"
 	"go/parser"
 	"go/token"
-	"io/ioutil"
-	"log"
 	"os"
+	"log"
 )
 
 var outfile string
@@ -40,7 +39,7 @@ func Main1() int {
 		flag.Usage()
 	}
 
-	content, err := ioutil.ReadFile(path)
+	content, err := os.ReadFile(path)
 	if err != nil {
 		log.Println(err)
 		return 1
