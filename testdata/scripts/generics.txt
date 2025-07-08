@@ -1,0 +1,281 @@
+astextract generic.go
+cmp stdout generic.stdout
+
+-- generic.go --
+package main
+
+import "fmt"
+
+func Sum[T int | int64 | float64](a, b T) T {
+    return a + b
+}
+
+type Pair[T any] struct {
+    First, Second T
+}
+
+func main() {
+    fmt.Println(Sum(3, 4))
+    p := Pair[string]{First: "hello", Second: "world"}
+    fmt.Println(p.First, p.Second)
+}
+
+-- generic.stdout --
+&ast.File {
+  Package: 1,
+  Name: &ast.Ident {
+    Name: "main",
+  },
+  Decls: []ast.Decl {
+    &ast.GenDecl {
+      Tok: token.IMPORT,
+      Specs: []ast.Spec {
+        &ast.ImportSpec {
+          Path: &ast.BasicLit {
+            Kind: token.STRING,
+            Value: "\"fmt\"",
+          },
+        },
+      },
+    },
+    &ast.FuncDecl {
+      Name: &ast.Ident {
+        Name: "Sum",
+      },
+      Type: &ast.FuncType {
+        TypeParams: &ast.FieldList {
+          List: []*ast.Field {
+            &ast.Field {
+              Names: []*ast.Ident {
+                &ast.Ident {
+                  Name: "T",
+                },
+              },
+              Type: &ast.BinaryExpr {
+                X: &ast.BinaryExpr {
+                  X: &ast.Ident {
+                    Name: "int",
+                  },
+                  Op: token.OR,
+                  Y: &ast.Ident {
+                    Name: "int64",
+                  },
+                },
+                Op: token.OR,
+                Y: &ast.Ident {
+                  Name: "float64",
+                },
+              },
+            },
+          },
+        },
+        Params: &ast.FieldList {
+          List: []*ast.Field {
+            &ast.Field {
+              Names: []*ast.Ident {
+                &ast.Ident {
+                  Name: "a",
+                },
+                &ast.Ident {
+                  Name: "b",
+                },
+              },
+              Type: &ast.Ident {
+                Name: "T",
+              },
+            },
+          },
+        },
+        Results: &ast.FieldList {
+          List: []*ast.Field {
+            &ast.Field {
+              Type: &ast.Ident {
+                Name: "T",
+              },
+            },
+          },
+        },
+      },
+      Body: &ast.BlockStmt {
+        List: []ast.Stmt {
+          &ast.ReturnStmt {
+            Results: []ast.Expr {
+              &ast.BinaryExpr {
+                X: &ast.Ident {
+                  Name: "a",
+                },
+                Op: token.ADD,
+                Y: &ast.Ident {
+                  Name: "b",
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    &ast.GenDecl {
+      Tok: token.TYPE,
+      Specs: []ast.Spec {
+        &ast.TypeSpec {
+          Name: &ast.Ident {
+            Name: "Pair",
+          },
+          TypeParams: &ast.FieldList {
+            List: []*ast.Field {
+              &ast.Field {
+                Names: []*ast.Ident {
+                  &ast.Ident {
+                    Name: "T",
+                  },
+                },
+                Type: &ast.Ident {
+                  Name: "any",
+                },
+              },
+            },
+          },
+          Type: &ast.StructType {
+            Fields: &ast.FieldList {
+              List: []*ast.Field {
+                &ast.Field {
+                  Names: []*ast.Ident {
+                    &ast.Ident {
+                      Name: "First",
+                    },
+                    &ast.Ident {
+                      Name: "Second",
+                    },
+                  },
+                  Type: &ast.Ident {
+                    Name: "T",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    &ast.FuncDecl {
+      Name: &ast.Ident {
+        Name: "main",
+      },
+      Type: &ast.FuncType {
+        Params: &ast.FieldList {},
+      },
+      Body: &ast.BlockStmt {
+        List: []ast.Stmt {
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.CallExpr {
+                  Fun: &ast.Ident {
+                    Name: "Sum",
+                  },
+                  Args: []ast.Expr {
+                    &ast.BasicLit {
+                      Kind: token.INT,
+                      Value: "3",
+                    },
+                    &ast.BasicLit {
+                      Kind: token.INT,
+                      Value: "4",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.AssignStmt {
+            Lhs: []ast.Expr {
+              &ast.Ident {
+                Name: "p",
+              },
+            },
+            Tok: token.DEFINE,
+            Rhs: []ast.Expr {
+              &ast.CompositeLit {
+                Type: &ast.IndexExpr {
+                  X: &ast.Ident {
+                    Name: "Pair",
+                  },
+                  Index: &ast.Ident {
+                    Name: "string",
+                  },
+                },
+                Elts: []ast.Expr {
+                  &ast.KeyValueExpr {
+                    Key: &ast.Ident {
+                      Name: "First",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"hello\"",
+                    },
+                  },
+                  &ast.KeyValueExpr {
+                    Key: &ast.Ident {
+                      Name: "Second",
+                    },
+                    Value: &ast.BasicLit {
+                      Kind: token.STRING,
+                      Value: "\"world\"",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          &ast.ExprStmt {
+            X: &ast.CallExpr {
+              Fun: &ast.SelectorExpr {
+                X: &ast.Ident {
+                  Name: "fmt",
+                },
+                Sel: &ast.Ident {
+                  Name: "Println",
+                },
+              },
+              Args: []ast.Expr {
+                &ast.SelectorExpr {
+                  X: &ast.Ident {
+                    Name: "p",
+                  },
+                  Sel: &ast.Ident {
+                    Name: "First",
+                  },
+                },
+                &ast.SelectorExpr {
+                  X: &ast.Ident {
+                    Name: "p",
+                  },
+                  Sel: &ast.Ident {
+                    Name: "Second",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  },
+  Imports: []*ast.ImportSpec {
+    &ast.ImportSpec {
+      Path: &ast.BasicLit {
+        Kind: token.STRING,
+        Value: "\"fmt\"",
+      },
+    },
+  },
+}
+

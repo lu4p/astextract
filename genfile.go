@@ -2,7 +2,6 @@ package astextract
 
 import (
 	"go/format"
-	"io/ioutil"
 	"os"
 	"path/filepath"
 )
@@ -42,5 +41,5 @@ func main() {
 		return err
 	}
 
-	return ioutil.WriteFile(outfile, formatted, 0644)
+	return os.WriteFile(outfile, formatted, 0644)
 }
