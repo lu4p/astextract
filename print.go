@@ -66,7 +66,8 @@ func PosFilter(name string, v reflect.Value) bool {
 	blacklist := []string{
 		"If", "Return", "Func", "Opening", "Closing", "Colon", "Obj",
 		"Struct", "Map", "For", "Star", "Case", "Begin", "Defer", "Go",
-		"Interface", "Select", "Struct", "Switch", "Arrow",
+		"Interface", "Select", "Struct", "Switch", "Arrow", "Range",
+		"FileStart", "FileEnd",
 	}
 
 	bracePos := []string{"brace", "paren", "brack"}
